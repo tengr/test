@@ -47,7 +47,6 @@ public class MainActivity extends FragmentActivity
     private GoogleApiClient mGoogleApiClient;
     private TextView mMessageView;
 
-
     //Address Progress
     private TextView mAddress;
     private ProgressBar mActivityIndicator;
@@ -69,7 +68,7 @@ public class MainActivity extends FragmentActivity
         mActivityIndicator =
                 (ProgressBar) findViewById(R.id.address_progress);
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-        //mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         // Add this line
         mMap.setMyLocationEnabled(true);
 
@@ -152,7 +151,7 @@ public class MainActivity extends FragmentActivity
             mMap.addMarker(new MarkerOptions()
                     .position(myLatLng)
                     .title("My Location").snippet("Some Address"));
-             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+             Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
             // Get the current location from the input parameter list
             // Create a list to contain the result address
             try {
@@ -175,10 +174,8 @@ public class MainActivity extends FragmentActivity
 
             }
             // If the reverse geocode returned an address
-            int count = 0;
-            while (addresses != null && addresses.size() > 0 && count < 5) {
-                Address address = addresses.get(count);
-                count++;
+            if (addresses != null && addresses.size() > 0 ) {
+                Address address = addresses.get(0);
                 addressText = String.format(
                         "%s, %s, %s",
                         // If there's a street address, add it
@@ -188,6 +185,9 @@ public class MainActivity extends FragmentActivity
                         address.getLocality(),
                         // The country of the address
                         address.getCountryName());
+            }
+            else {
+                addressText += "address = null";
             }
 
             // Return the text
